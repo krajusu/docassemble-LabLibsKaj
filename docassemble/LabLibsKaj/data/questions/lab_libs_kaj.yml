@@ -1,0 +1,268 @@
+---
+include:
+  - docassemble.AssemblyLine:al_package.yml
+---
+metadata:
+  title: |
+    Lab libs
+  short title: |
+    Lab libs
+---
+mandatory: True
+comment: |
+  This contains metadata that will not be overwritten if this YAML file is included in another
+  file. Each file gets its own key in the interview_metadata dictionary.
+  Most keys are not currently used at runtime, other than "allowed courts".
+code: |
+  interview_metadata
+  if not defined("interview_metadata['lab_libs_kaj']"):
+    interview_metadata.initializeObject("lab_libs_kaj")
+    interview_metadata["lab_libs_kaj"].update({
+      "al_weaver_version": "0.82",
+      "generated on": "2021-06-02",
+      "title": "Lab libs",
+      "short title": "Lab libs",
+      "description": "Demo to fill in!",
+      "original_form": "",
+      "allowed courts": [
+      ],
+      "categories": [
+      ],        
+      "logic block variable": "interview_order_lab_libs_kaj",
+      "attachment block variable": "lab_libs_kaj_attachment",
+      "typical role": "na",
+    })
+---
+code: |
+  interview_short_title = "Do a Lab libs activity"
+---
+code: |
+  al_form_type = 'other'
+---
+objects:
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+---
+sections:
+  - review_lab_libs_kaj: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_lab_libs_kaj
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = interview_metadata["lab_libs_kaj"]["allowed courts"]
+  nav.set_section('review_lab_libs_kaj')
+  user_role = 'na'
+  astrological_event
+  place_name
+  activity_name
+  set_progress(25.0)
+  adjective_name
+  present_participle
+  plural_noun
+  set_progress(50.0)
+  clothing_accessory
+  interview_order_lab_libs_kaj = True
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  lab_libs_kaj_intro
+  interview_order_lab_libs_kaj
+  signature_date
+  # Save anonymized interview statistics (customize the saved data below)
+  store_variables_snapshot(data={'zip': users[0].address.zip})
+  lab_libs_kaj_preview_question
+  basic_questions_signature_flow
+  lab_libs_kaj_download
+---
+code: |
+  signature_fields = []
+---
+comment: |
+  This question is used to introduce your interview. Please customize
+id: Lab_libs
+continue button field: lab_libs_kaj_intro
+question: |
+  Lab libs
+subquestion: |
+  Demo to fill in!
+---
+id: Name an astrological event
+question: |
+  Name an astrological event
+subquestion: |
+  ex: super moon
+fields:
+  - "Astrological event": astrological_event
+    maxlength: 27
+---
+id: Name a place
+question: |
+  Name a place
+subquestion: |
+  ex: Georgia
+fields:
+  - "Place name": place_name
+    maxlength: 23
+---
+id: Give us an activity
+question: |
+  Give us an activity
+subquestion: |
+  ex: skating or running
+fields:
+  - "Activity name": activity_name
+    maxlength: 21
+---
+id: Give an adjective
+question: |
+  Give an adjective
+fields:
+  - "Adjective name": adjective_name
+    maxlength: 16
+---
+id: Insert present principle
+question: |
+  Insert present principle
+subquestion: |
+  ex: laughing
+fields:
+  - "Present participle": present_participle
+    maxlength: 23
+---
+id: Give a plural noun
+question: |
+  Give a plural noun
+fields:
+  - "Plural noun": plural_noun
+    maxlength: 15
+---
+id: Give a clothing accessory
+question: |
+  Give a clothing accessory
+subquestion: |
+  ex: t-shirt
+fields:
+  - "Clothing accessory": clothing_accessory
+    maxlength: 20
+---
+id: preview lab_libs_kaj
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_recipient_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Make changes" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_lab_libs_kaj'), label='Make changes', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: lab_libs_kaj_preview_question    
+---
+id: lab libs kaj review screen
+event: review_lab_libs_kaj
+question: |
+  Review your answers
+review:
+  - Edit: astrological_event
+    button: |
+      **Astrological event**:
+      ${ astrological_event }
+  - Edit: place_name
+    button: |
+      **Place name**:
+      ${ place_name }
+  - Edit: activity_name
+    button: |
+      **Activity name**:
+      ${ activity_name }
+  - Edit: adjective_name
+    button: |
+      **Adjective name**:
+      ${ adjective_name }
+  - Edit: present_participle
+    button: |
+      **Present participle**:
+      ${ present_participle }
+  - Edit: plural_noun
+    button: |
+      **Plural noun**:
+      ${ plural_noun }
+  - Edit: clothing_accessory
+    button: |
+      **Clothing accessory**:
+      ${ clothing_accessory }
+---
+id: download lab_libs_kaj
+event: lab_libs_kaj_download
+question: |
+  Your form is ready to download.
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Make changes" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_lab_libs_kaj'), label='Make changes', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+
+progress: 100
+---
+objects:
+  - Post_interview_instructions: ALDocument.using(title="Instructions", filename="lab_libs_kaj_next_steps.docx", enabled=True, has_addendum=False)
+  - lab_libs_kaj_attachment: ALDocument.using(title="Demo to fill in!", filename="lab_libs_labeled.pdf", enabled=True, has_addendum=False)
+  - Post_interview_instructions: ALDocument.using(title="Instructions", filename="lab_libs_kaj_next_steps.docx", enabled=True, has_addendum=False)
+  - lab_libs_kaj_attachment: ALDocument.using(title="Demo to fill in!", filename="lab_libs_labeled.pdf", enabled=True, has_addendum=False)
+---
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[Post_interview_instructions,lab_libs_kaj_attachment], filename="lab_libs_kaj_package.pdf", title="All forms to download for your records")
+  - al_recipient_bundle: ALDocumentBundle.using(elements=[lab_libs_kaj_attachment], filename="lab_libs_kaj_package.pdf", title="All forms to download for your records")
+---
+attachments:
+  - name: Post interview instructions
+    filename: Post-interview-instructions     
+    variable name: Post_interview_instructions[i]        
+    docx template file: lab_libs_kaj_next_steps.docx
+  - name: lab libs kaj attachment
+    filename: lab_libs_kaj     
+    variable name: lab_libs_kaj_attachment[i]        
+    skip undefined: True
+    pdf template file: lab_libs_labeled.pdf
+    fields:
+      - "astrological_event": ${ astrological_event }
+      - "place_name": ${ place_name }
+      - "activity_name": ${ activity_name }
+      - "adjective_name": ${ adjective_name }
+      - "present_participle": ${ present_participle }
+      - "plural_noun": ${ plural_noun }
+      - "clothing_accessory": ${ clothing_accessory }
+  - name: Post interview instructions
+    filename: Post-interview-instructions     
+    variable name: Post_interview_instructions[i]        
+    docx template file: lab_libs_kaj_next_steps.docx
+  - name: lab libs kaj attachment
+    filename: lab_libs_kaj     
+    variable name: lab_libs_kaj_attachment[i]        
+    skip undefined: True
+    pdf template file: lab_libs_labeled.pdf
+    fields:
+      - "astrological_event": ${ astrological_event }
+      - "place_name": ${ place_name }
+      - "activity_name": ${ activity_name }
+      - "adjective_name": ${ adjective_name }
+      - "present_participle": ${ present_participle }
+      - "plural_noun": ${ plural_noun }
+      - "clothing_accessory": ${ clothing_accessory }
